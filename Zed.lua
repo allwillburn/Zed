@@ -104,7 +104,7 @@ OnTick(function (myHero)
           if Mix:Mode() == "Harass" then
             if ZedMenu.Harass.Q:Value() and Ready(_Q) and ValidTarget(target, 900) then
 				if target ~= nil then 
-                                      CastTargetSpell(target, _Q)
+                                     CastSkillShot(_Q, target)
                                 end
             end
 
@@ -137,7 +137,7 @@ OnTick(function (myHero)
 
             if ZedMenu.Combo.Q:Value() and Ready(_Q) and ValidTarget(target, 900) then
 		     if target ~= nil then 
-                         CastTargetSpell(target, _Q)
+                         CastSkillShot(_Q, target)
                      end
             end
 
@@ -190,7 +190,7 @@ OnTick(function (myHero)
                 
                 if IsReady(_Q) and ValidTarget(enemy, 900) and ZedMenu.KillSteal.Q:Value() and GetHP(enemy) < getdmg("Q",enemy) then
 		         if target ~= nil then 
-                                      CastTargetSpell(target, _Q)
+                                      CastSkillShot(_Q, target)
 		         end
                 end 
 
@@ -203,7 +203,7 @@ OnTick(function (myHero)
       if Mix:Mode() == "LaneClear" then
       	  for _,closeminion in pairs(minionManager.objects) do
 	        if ZedMenu.LaneClear.Q:Value() and Ready(_Q) and ValidTarget(closeminion, 900) then
-	        	CastTargetSpell(closeminion, _Q)
+	        	CastSkillShot(closeminion, _Q)
                 end
 
                 if ZedMenu.LaneClear.W:Value() and Ready(_W) and ValidTarget(closeminion, 700) then
@@ -226,7 +226,7 @@ OnTick(function (myHero)
         --AutoMode
         if ZedMenu.AutoMode.Q:Value() then        
           if Ready(_Q) and ValidTarget(target, 900) then
-		      CastTargetSpell(target, _Q)
+		      CastSkillShot(_Q, target)
           end
         end 
         if ZedMenu.AutoMode.W:Value() then        
