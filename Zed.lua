@@ -1,4 +1,4 @@
-local ver = "0.03"
+local ver = "0.04"
 
 
 if FileExist(COMMON_PATH.."MixLib.lua") then
@@ -296,6 +296,8 @@ ZedMenu.SkinChanger:Slider("SelectedSkin", "Select A Skin:", 1, 0, 4, 1, functio
 			CastSpell(Summoner_2)
 		end
 	end
+
+     end
 end)
 
 OnDraw(function (myHero)
