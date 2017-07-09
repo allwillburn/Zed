@@ -1,4 +1,4 @@
-local ver = "0.05"
+local ver = "0.06"
 
 
 if FileExist(COMMON_PATH.."MixLib.lua") then
@@ -57,6 +57,11 @@ ZedMenu.AutoMode:Slider("Qpred", "Q Hit Chance", 3,0,10,1)
 ZedMenu.AutoMode:Boolean("W", "Auto W", false)
 ZedMenu.AutoMode:Boolean("E", "Auto E", false)
 ZedMenu.AutoMode:Boolean("R", "Auto R", false)
+
+ZedMenu:SubMenu("AutoFarm", "AutoFarm")
+ZedMenu.AutoFarm:Boolean("Q", "Auto Q", false)
+ZedMenu.AutoFarm:Boolean("W", "Auto W", false)
+ZedMenu.AutoFarm:Boolean("E", "Auto E", false)
 
 
 
@@ -224,6 +229,9 @@ OnTick(function (myHero)
                 end	
       end
 
+
+
+
       if Mix:Mode() == "LaneClear" then
       	  for _,closeminion in pairs(minionManager.objects) do
 	        if ZedMenu.LaneClear.Q:Value() and Ready(_Q) and ValidTarget(closeminion, 900) then
@@ -247,6 +255,33 @@ OnTick(function (myHero)
       	        end
           end
       end
+
+
+
+
+
+       --Auto on minions
+          for _, minion in pairs(minionManager.objects) do
+      			
+      			   	
+              if ZedMenu.AutoFarm.Q:Value() and Ready(_Q) and ValidTarget(minion, 900) and GetCurrentHP(minion) < CalcDamage(myHero,minion,QDmg,Q) then
+                  CastSkillShot(_Q, minion)
+              end
+
+              if ZedMenu.AutoFarm.W:Value() and Ready(_W) and ValidTarget(minion, 600) and GetCurrentHP(minion) < CalcDamage(myHero,minion,WDmg,W) then
+                  CastSkillShot(_W, minion)
+              end
+
+              if ZedMenu.AutoFarm.E:Value() and Ready(_E) and ValidTarget(minion, 275) and GetCurrentHP(minion) < CalcDamage(myHero,minion,EDmg,E) then
+                  CastTargetSpell(minion, _E)
+              end
+		
+	      
+			
+          end
+
+
+
         --AutoMode
         if ZedMenu.AutoMode.Q:Value() and Ready(_Q) and ValidTarget(target, 1000) then
                  local QPred = GetPrediction(target,ZedQ)
