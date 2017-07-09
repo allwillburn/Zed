@@ -1,4 +1,4 @@
-local ver = "0.04"
+local ver = "0.05"
 
 
 if FileExist(COMMON_PATH.."MixLib.lua") then
@@ -34,7 +34,6 @@ local SetDCP, SkinChanger = 0
 local ZedMenu = Menu("Zed", "Zed")
 
 ZedMenu:SubMenu("Combo", "Combo")
-
 ZedMenu.Combo:Boolean("Q", "Use Q in combo", true)
 ZedMenu.Combo:Slider("Qpred", "Q Hit Chance", 3,0,10,1)
 ZedMenu.Combo:Boolean("W", "Use W in combo", true)
@@ -59,10 +58,7 @@ ZedMenu.AutoMode:Boolean("W", "Auto W", false)
 ZedMenu.AutoMode:Boolean("E", "Auto E", false)
 ZedMenu.AutoMode:Boolean("R", "Auto R", false)
 
-ZedMenu:SubMenu("AutoFarm", "AutoFarm")
-ZedMenu.AutoFarm:Boolean("Q", "Auto Q", false)
-ZedMenu.AutoFarm:Boolean("W", "Auto W", false)
-ZedMenu.AutoFarm:Boolean("E", "Auto E", false)
+
 
 ZedMenu:SubMenu("LaneClear", "LaneClear")
 ZedMenu.LaneClear:Boolean("Q", "Use Q", true)
@@ -71,32 +67,33 @@ ZedMenu.LaneClear:Boolean("E", "Use E", true)
 ZedMenu.LaneClear:Boolean("RHydra", "Use RHydra", true)
 ZedMenu.LaneClear:Boolean("Tiamat", "Use Tiamat", true)
 
+
 ZedMenu:SubMenu("Harass", "Harass")
 ZedMenu.Harass:Boolean("Q", "Use Q", true)
 ZedMenu.Harass:Boolean("W", "Use W", true)
-ZedMenu.Harass:Boolean("E", "Use E", true)
+
 
 ZedMenu:SubMenu("KillSteal", "KillSteal")
 ZedMenu.KillSteal:Boolean("Q", "KS w Q", true)
 ZedMenu.KillSteal:Slider("Qpred", "Q Hit Chance", 3,0,10,1)
-ZedMenu.KillSteal:Boolean("W", "KS w W", true)
 ZedMenu.KillSteal:Boolean("E", "KS w E", true)
+ZedMenu.KillSteal:Boolean("R", "KS w R", true)
+
+
 
 ZedMenu:SubMenu("AutoIgnite", "AutoIgnite")
 ZedMenu.AutoIgnite:Boolean("Ignite", "Ignite if killable", true)
 
+
 ZedMenu:SubMenu("Drawings", "Drawings")
 ZedMenu.Drawings:Boolean("DQ", "Draw Q Range", true)
+
 
 ZedMenu:SubMenu("SkinChanger", "SkinChanger")
 ZedMenu.SkinChanger:Boolean("Skin", "UseSkinChanger", true)
 ZedMenu.SkinChanger:Slider("SelectedSkin", "Select A Skin:", 1, 0, 4, 1, function(SetDCP) HeroSkinChanger(myHero, SetDCP)  end, true)
 
-
-
-
-
-
+OnTick(function (myHero)
 	local target = GetCurrentTarget()
         local YGB = GetItemSlot(myHero, 3142)
 	local RHydra = GetItemSlot(myHero, 3074)
@@ -105,7 +102,10 @@ ZedMenu.SkinChanger:Slider("SelectedSkin", "Select A Skin:", 1, 0, 4, 1, functio
         local BOTRK = GetItemSlot(myHero, 3153)
         local Cutlass = GetItemSlot(myHero, 3144)
         local Randuins = GetItemSlot(myHero, 3143)
-        local ZedQ = {delay = 0.25, range = 900, width = 50, speed = 1700}
+	local ZedQ = {delay = 0.25, range = 900, width = 50, speed = 1700}
+        
+		
+		
 
 	--AUTO LEVEL UP
 	if ZedMenu.AutoMode.Level:Value() then
@@ -118,20 +118,20 @@ ZedMenu.SkinChanger:Slider("SelectedSkin", "Select A Skin:", 1, 0, 4, 1, functio
         
         --Harass
           if Mix:Mode() == "Harass" then
-            if ZedMenu.Harass.Q:Value() and Ready(_Q) and ValidTarget(target, 900) then
+            if ZedMenu.Harass.Q:Value() and Ready(_Q) and ValidTarget(target, 825) then
 				if target ~= nil then 
-                                     CastSkillShot(_Q, target)
+                                      CastTargetSpell(target, _Q)
                                 end
             end
 
-            if ZedMenu.Harass.W:Value() and Ready(_W) and ValidTarget(target, 700) then
+            if ZedMenu.Harass.W:Value() and Ready(_W) and ValidTarget(target, 600) then
 				CastSkillShot(_W, target)
             end     
           end
 
 	--COMBO
 	  if Mix:Mode() == "Combo" then
-            if ZedMenu.Combo.YGB:Value() and YGB > 0 and Ready(YGB) and ValidTarget(target, 900) then
+            if ZedMenu.Combo.YGB:Value() and YGB > 0 and Ready(YGB) and ValidTarget(target, 700) then
 			CastSpell(YGB)
             end
 
@@ -143,12 +143,12 @@ ZedMenu.SkinChanger:Slider("SelectedSkin", "Select A Skin:", 1, 0, 4, 1, functio
 			 CastTargetSpell(target, BOTRK)
             end
 
-            if ZedMenu.Combo.Cutlass:Value() and Cutlass > 0 and Ready(Cutlass) and ValidTarget(target, 900) then
+            if ZedMenu.Combo.Cutlass:Value() and Cutlass > 0 and Ready(Cutlass) and ValidTarget(target, 700) then
 			 CastTargetSpell(target, Cutlass)
             end
 
-            if ZedMenu.Combo.E:Value() and Ready(_E) and ValidTarget(target, 290) then
-			 CastSpell(_E)
+            if ZedMenu.Combo.E:Value() and Ready(_E) and ValidTarget(target, 600) then
+			 CastSkillShot(_E, target)
 	    end
 
             if ZedMenu.Combo.Q:Value() and Ready(_Q) and ValidTarget(target, 900) then
@@ -162,7 +162,7 @@ ZedMenu.SkinChanger:Slider("SelectedSkin", "Select A Skin:", 1, 0, 4, 1, functio
 			CastSpell(Tiamat)
             end
 
-            if ZedMenu.Combo.Gunblade:Value() and Gunblade > 0 and Ready(Gunblade) and ValidTarget(target, 900) then
+            if ZedMenu.Combo.Gunblade:Value() and Gunblade > 0 and Ready(Gunblade) and ValidTarget(target, 700) then
 			CastTargetSpell(target, Gunblade)
             end
 
@@ -170,14 +170,14 @@ ZedMenu.SkinChanger:Slider("SelectedSkin", "Select A Skin:", 1, 0, 4, 1, functio
 			CastSpell(RHydra)
             end
 
-	    if ZedMenu.Combo.W:Value() and Ready(_W) and ValidTarget(target, 700) then
+	    if ZedMenu.Combo.W:Value() and Ready(_W) and ValidTarget(target, GetCastRange(myHero,_W)) then
 			CastSkillShot(_W, target)
 	    end
 	    
 	    
-            if ZedMenu.Combo.R:Value() and Ready(_R) and ValidTarget(target, 900) and (EnemiesAround(myHeroPos(), 900) >= ZedMenu.Combo.RX:Value()) then
-			CastTargetSpell(target, _R)
-            end
+            if ZedMenu.Combo.R:Value() and Ready(_R) and ValidTarget(target, 900) then             
+                CastTargetSpell(target, _R)
+            end	
 
           end
 
@@ -205,36 +205,37 @@ ZedMenu.SkinChanger:Slider("SelectedSkin", "Select A Skin:", 1, 0, 4, 1, functio
 
         for _, enemy in pairs(GetEnemyHeroes()) do
                 
-                if IsReady(_Q) and ValidTarget(enemy, 900) and ZedMenu.KillSteal.Q:Value() and GetHP(enemy) < getdmg("Q",enemy) then
-                       local QPred = GetPrediction(target,ZedQ)
-                       if QPred.hitChance > (ZedMenu.KillSteal.Qpred:Value() * 0.1) then
-                                 CastSkillShot(_Q, QPred.castPos)
-                       end
-                end 
+                if ZedMenu.KillSteal.Q:Value() and Ready(_Q) and ValidTarget(target, 900) then
+                 local QPred = GetPrediction(target,ZedQ)
+                    if QPred.hitChance > (ZedMenu.KillSteal.Qpred:Value() * 0.1) then
+                           CastSkillShot(_Q, QPred.castPos)
+                    end
+                end	
 
-                if IsReady(_W) and ValidTarget(enemy, 700) and ZedMenu.KillSteal.W:Value() and GetHP(enemy) < getdmg("W",enemy) then
-		                      CastSkillShot(_W, target)
+
+                if IsReady(_E) and ValidTarget(enemy, 600) and ZedMenu.KillSteal.E:Value() and GetHP(enemy) < getdmg("E",enemy) then
+		                      CastSkillShot(_E, target)
   
                 end
-
-                if IsReady(_E) and ValidTarget(enemy, 290) and ZedMenu.KillSteal.E:Value() and GetHP(enemy) < getdmg("E",enemy) then
-		                      CastSpell(_E)
-  
-                end
+			
+		if ZedMenu.KillSteal.R:Value() and Ready(_R) and ValidTarget(target, 900) then                
+                           CastTargetSpell(target, _R)
+                  
+                end	
       end
 
       if Mix:Mode() == "LaneClear" then
       	  for _,closeminion in pairs(minionManager.objects) do
 	        if ZedMenu.LaneClear.Q:Value() and Ready(_Q) and ValidTarget(closeminion, 900) then
-	        	CastSkillShot(_Q, closeminion)
+	        	CastTargetSpell(closeminion, _Q)
                 end
 
-                if ZedMenu.LaneClear.W:Value() and Ready(_W) and ValidTarget(closeminion, 700) then
+                if ZedMenu.LaneClear.W:Value() and Ready(_W) and ValidTarget(closeminion, 600) then
 	        	CastSkillShot(_W, target)
 	        end
 
-                if ZedMenu.LaneClear.E:Value() and Ready(_E) and ValidTarget(closeminion, 290) then
-	        	CastSpell(_E)
+                if ZedMenu.LaneClear.E:Value() and Ready(_E) and ValidTarget(closeminion, 600) then
+	        	CastSkillShot(_E, target)
 	        end
 
                 if ZedMenu.LaneClear.Tiamat:Value() and ValidTarget(closeminion, 350) then
@@ -246,47 +247,27 @@ ZedMenu.SkinChanger:Slider("SelectedSkin", "Select A Skin:", 1, 0, 4, 1, functio
       	        end
           end
       end
-
-
-        --Auto on minions
-          for _, minion in pairs(minionManager.objects) do
-      			
-      			   	
-              if ZedMenu.AutoFarm.Q:Value() and Ready(_Q) and ValidTarget(minion, 880) and GetCurrentHP(minion) < CalcDamage(myHero,minion,QDmg,Q) then
-                  CastSkillShot(_Q, minion)
-              end
-
-              if ZedMenu.AutoFarm.E:Value() and Ready(_E) and ValidTarget(minion, 290) and GetCurrentHP(minion) < CalcDamage(myHero,minion,EDmg,E) then
-                  CastTargetSpell(minion, _E)
-              end		
-			
-          end
-
-
-
         --AutoMode
-        if ZedMenu.AutoMode.Q:Value() and ValidTarget(target, 900) then        
-               local QPred = GetPrediction(target,ZedQ)
-               if QPred.hitChance > (ZedMenu.AutoMode.Qpred:Value() * 0.1) then
-                         CastSkillShot(_Q, QPred.castPos)
-               end
-       end
+        if ZedMenu.AutoMode.Q:Value() and Ready(_Q) and ValidTarget(target, 1000) then
+                 local QPred = GetPrediction(target,ZedQ)
+                 if QPred.hitChance > (ZedMenu.AutoMode.Qpred:Value() * 0.1) then
+                           CastSkillShot(_Q, QPred.castPos)
+                 end
+        end	
 
         if ZedMenu.AutoMode.W:Value() then        
-          if Ready(_W) and ValidTarget(target, 700) then
-	  	     CastSkillShot(_W, target)
+          if Ready(_W) and ValidTarget(target, 600) then
+	  	      CastSkillShot(_W, target)
           end
         end
         if ZedMenu.AutoMode.E:Value() then        
-	  if Ready(_E) and ValidTarget(target, 290) then
-		      CastSpell(_E)
+	  if Ready(_E) and ValidTarget(target, 600) then
+		      CastSkillShot(_E, target)
 	  end
         end
-        if ZedMenu.AutoMode.R:Value() then        
-	  if Ready(_R) and ValidTarget(target, 900) then
-		      CastTargetSpell(target, _R)
-	  end
-        end
+        if ZedMenu.AutoMode.R:Value() and Ready(_R) and ValidTarget(target, 900) then                
+                 CastTargetSpell(target, _R)
+            end	
                 
 	--AUTO GHOST
 	if ZedMenu.AutoMode.Ghost:Value() then
@@ -296,14 +277,12 @@ ZedMenu.SkinChanger:Slider("SelectedSkin", "Select A Skin:", 1, 0, 4, 1, functio
 			CastSpell(Summoner_2)
 		end
 	end
-
-     end
 end)
 
 OnDraw(function (myHero)
         
          if ZedMenu.Drawings.DQ:Value() then
-		DrawCircle(GetOrigin(myHero), 900, 0, 200, GoS.Red)
+		DrawCircle(GetOrigin(myHero), 825, 0, 200, GoS.Red)
 	end
 
 end)
@@ -312,7 +291,6 @@ end)
 OnProcessSpell(function(unit, spell)
 	local target = GetCurrentTarget()        
        
-        
         if unit.isMe and spell.name:lower():find("itemtiamatcleave") then
 		Mix:ResetAA()
 	end	
